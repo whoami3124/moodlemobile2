@@ -42,6 +42,14 @@ angular.module('mm.core.user')
                 user.roles = roles;
             });
 
+            if (user.email && user.id != $mmSite.getUserId()) {
+                var version = $mmSite.getInfo().version;
+                // Show the e-mail only in sites running 3.2 onwards.
+                if (version && parseInt(version, 10) >= 2016110200) {
+                    delete user.email;
+                }
+            }
+
             $scope.user = user;
             $scope.title = user.fullname;
             $scope.hasContact = user.email || user.phone1 || user.phone2 || user.city || user.country || user.address;
