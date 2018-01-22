@@ -103,18 +103,6 @@ export interface CoreCoursesHandlerData {
     title: string;
 
     /**
-     * Name of the icon to display for the handler.
-     * @type {string}
-     */
-    icon: string;
-
-    /**
-     * Class to add to the displayed handler.
-     * @type {string}
-     */
-    class?: string;
-
-    /**
      * Action to perform when the handler is clicked.
      *
      * @param {any} course The course.
