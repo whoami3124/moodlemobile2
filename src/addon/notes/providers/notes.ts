@@ -56,9 +56,9 @@ export class AddonNotesProvider {
         }
 
         // Send note to server.
-        return this.addNoteOnline(userId, courseId, publishState, noteText, siteId).then(function() {
+        return this.addNoteOnline(userId, courseId, publishState, noteText, siteId).then(() => {
             return true;
-        }).catch(function(data) {
+        }).catch((data) => {
             if (data.wserror) {
                 // It's a WebService error, the user cannot add the note so don't store it.
                 return Promise.reject(data.error);
@@ -70,7 +70,7 @@ export class AddonNotesProvider {
 
         // Convenience function to store a note to be synchronized later.
         /**function storeOffline() {
-            return $mmaNotesOffline.saveNote(userId, courseId, publishState, noteText, siteId).then(function() {
+            return $mmaNotesOffline.saveNote(userId, courseId, publishState, noteText, siteId).then(() => {
                 return false;
             });
         }**/
@@ -102,12 +102,12 @@ export class AddonNotesProvider {
                 }
             ];
 
-        return this.addNotesOnline(notes, siteId).catch(function(error) {
+        return this.addNotesOnline(notes, siteId).catch((error) => {
             return Promise.reject({
                 error: error,
                 wserror: this.utilsProvider.isWebServiceError(error)
             });
-        }).then(function(response) {
+        }).then((response) => {
             if (response && response[0] && response[0].noteid === -1) {
                 // There was an error, and it should be translated already.
                 return Promise.reject({
@@ -117,7 +117,7 @@ export class AddonNotesProvider {
             }
 
             // A note was added, invalidate the course notes.
-            return this.invalidateNotes(courseId, siteId).catch(function() {
+            return this.invalidateNotes(courseId, siteId).catch(() => {
                 // Ignore errors.
             });
         });
@@ -141,7 +141,7 @@ export class AddonNotesProvider {
 
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
             var data = {
                     notes: notes
                 };
@@ -165,7 +165,7 @@ export class AddonNotesProvider {
     isPluginAddNoteEnabled(siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
             if (!site.canUseAdvancedFeature('enablenotes')) {
                 return false;
             } else if (!site.wsAvailable('core_notes_create_notes')) {
@@ -189,7 +189,7 @@ export class AddonNotesProvider {
     isPluginAddNoteEnabledForCourse(courseId: number, siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
             // The only way to detect if it's enabled is to perform a WS call.
             // We use an invalid user ID (-1) to avoid saving the note if the user has permissions.
             var data = {
@@ -206,10 +206,10 @@ export class AddonNotesProvider {
 
             // Use .read to cache data and be able to check it in offline. This means that, if a user loses the capabilities
             // to add notes, he'll still see the option in the app.
-            return site.read('core_notes_create_notes', data).then(function() {
+            return site.read('core_notes_create_notes', data).then(() => {
                 // User can add notes.
                 return true;
-            }).catch(function() {
+            }).catch(() => {
                 return false;
             });
         });
@@ -230,7 +230,7 @@ export class AddonNotesProvider {
     isPluginViewNotesEnabled(siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
             if (!site.canUseAdvancedFeature('enablenotes')) {
                 return false;
             } else if (!site.wsAvailable('core_notes_get_course_notes')) {
@@ -252,9 +252,9 @@ export class AddonNotesProvider {
      * @return {Promise}         Promise resolved with true if enabled, resolved with false or rejected otherwise.
      */
     isPluginViewNotesEnabledForCourse(courseId, siteId?: string): Promise<boolean> {
-        return this.getNotes(courseId, false, true, siteId).then(function() {
+        return this.getNotes(courseId, false, true, siteId).then(() => {
             return true;
-        }).catch(function() {
+        }).catch(() => {
             return false;
         });
     };
@@ -276,17 +276,17 @@ export class AddonNotesProvider {
      * @ngdoc method
      * @name $mmaNotes#getNotes
      * @param  {Number} courseId     ID of the course to get the notes from.
-     * @param  {Boolean} ignoreCache True when we should not get the value from the cache.
-     * @param  {Boolean} onlyOnline  True to return only online notes, false to return both online and offline.
+     * @param  {Boolean} [ignoreCache] True when we should not get the value from the cache.
+     * @param  {Boolean} [onlyOnline]  True to return only online notes, false to return both online and offline.
      * @param  {String} [siteId]     Site ID. If not defined, current site.
      * @return {Promise}             Promise to be resolved when the notes are retrieved.
      */
-    getNotes(courseId: number, ignoreCache: boolean, onlyOnline: boolean, siteId?: string): Promise<any> {
+    getNotes(courseId: number, ignoreCache?: boolean, onlyOnline?: boolean, siteId?: string): Promise<any> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         this.logger.debug('Get notes for course ' + courseId);
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
 
             var data = {
                     courseid : courseId
@@ -300,14 +300,14 @@ export class AddonNotesProvider {
                 preSets.emergencyCache = false;
             }
 
-            return site.read('core_notes_get_course_notes', data, presets).then(function(notes) {
+            return site.read('core_notes_get_course_notes', data, presets).then((notes) => {
                 if (onlyOnline) {
                     return notes;
                 }
                 /*
                 // Get offline notes and add them to the list.
-                return $mmaNotesOffline.getNotesForCourse(courseId, siteId).then(function(offlineNotes) {
-                    angular.forEach(offlineNotes, function(note) {
+                return $mmaNotesOffline.getNotesForCourse(courseId, siteId).then((offlineNotes) => {
+                    angular.forEach(offlineNotes, (note) => {
                         var fieldName = note.publishstate + 'notes';
                         if (!notes[fieldName]) {
                             notes[fieldName] = [];
@@ -337,18 +337,18 @@ export class AddonNotesProvider {
         var promises = [];
 
         /*notes.forEach((note) => {
-            var promise = $mmUser.getProfile(note.userid, courseId, true).then(function(user) {
+            var promise = $mmUser.getProfile(note.userid, courseId, true).then((user) => {
                 note.userfullname = user.fullname;
                 note.userprofileimageurl = user.profileimageurl;
-            }, function() {
+            }, () => {
                 // Error getting profile. Set default data.
-                return this.translate.('mma.notes.userwithid', {id: note.userid}).then(function(str) {
+                return this.translate.('mma.notes.userwithid', {id: note.userid}).then((str) => {
                     note.userfullname = str;
                 });
             });
             promises.push(promise);
         });*/
-        return Promise.all(promises).then(function() {
+        return Promise.all(promises).then(() => {
             return notes;
         });
     };
@@ -389,7 +389,7 @@ export class AddonNotesProvider {
     invalidateNotes(courseId: number, siteId?: string): Promise<any> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
-        return this.sitesProvider.getSite(siteId).then(function(site) {
+        return this.sitesProvider.getSite(siteId).then((site) => {
             return site.invalidateWsCacheForKey(this.getNotesCacheKey(courseId));
         });
     };
