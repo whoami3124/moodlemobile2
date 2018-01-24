@@ -35,8 +35,7 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      * @return {boolean} Whether or not the handler is enabled on a site level.
      */
     isEnabled(): boolean|Promise<boolean> {
-        let isDisabled = this.notesProvider.isNotesDisabledInSite();
-        return !isDisabled;
+        return this.notesProvider.isPluginViewNotesEnabled();
     }
 
     /**
@@ -46,8 +45,10 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      */
     getDisplayData(): CoreCoursesHandlerData {
         return {
-            title: 'addon.calendar.calendar',
-            action: (courseId: number) => {},
+            title: 'addon.notes.notes',
+            action: (courseId: number) => {
+                // Do something.
+            },
         };
     }
 

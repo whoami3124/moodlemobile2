@@ -60,6 +60,7 @@ import { CoreCourseModule } from '../core/course/course.module';
 
 // Addon modules.
 import { AddonCalendarModule } from '../addon/calendar/calendar.module';
+import { AddonNotesModule } from '../addon/notes/notes.module';
 
 // For translate loader. AoT requires an exported function for factories.
 export function createTranslateLoader(http: HttpClient) {
@@ -92,7 +93,8 @@ export function createTranslateLoader(http: HttpClient) {
         CoreFileUploaderModule,
         CoreSharedFilesModule,
         CoreCourseModule,
-        AddonCalendarModule
+        AddonCalendarModule,
+        AddonNotesModule
     ],
     bootstrap: [IonicApp],
     entryComponents: [

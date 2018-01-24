@@ -17,11 +17,12 @@ import { CoreAppProvider } from '../../../providers/app';
 import { CoreLoggerProvider } from '../../../providers/logger';
 import { CoreUtilsProvider } from '../../../providers/utils/utils';
 import { CoreSitesProvider } from '../../../providers/sites';
+import { CoreSiteWSPreSets } from '../../../classes/site';
 import { CoreConfigProvider } from '../../../providers/config';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
- * Service to handle calendar events.
+ * Service to handle notes.
  */
 @Injectable()
 export class AddonNotesProvider {
@@ -129,7 +130,7 @@ export class AddonNotesProvider {
      * @module mm.addons.notes
      * @ngdoc method
      * @name $mmaNotes#addNotesOnline
-     * @param  {Object[]} notes  Notes to save.
+     * @param  {any[]} notes  Notes to save.
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved when added, rejected otherwise. Promise resolved doesn't mean that notes
      *                           have been added, the resolve param can contain errors for notes not sent.
@@ -288,19 +289,19 @@ export class AddonNotesProvider {
 
         return this.sitesProvider.getSite(siteId).then((site) => {
 
-            var data = {
+            let data = {
                     courseid : courseId
                 },
-                presets = {
+                preSets: CoreSiteWSPreSets = {
                     cacheKey: this.getNotesCacheKey(courseId)
                 };
 
             if (ignoreCache) {
-                presets.getFromCache = false;
+                preSets.getFromCache = false;
                 preSets.emergencyCache = false;
             }
 
-            return site.read('core_notes_get_course_notes', data, presets).then((notes) => {
+            return site.read('core_notes_get_course_notes', data, preSets).then((notes) => {
                 if (onlyOnline) {
                     return notes;
                 }
@@ -329,7 +330,7 @@ export class AddonNotesProvider {
      * @module mm.addons.notes
      * @ngdoc method
      * @name $mmaNotes#getNotesUserData
-     * @param  {Object[]} notes  Notes to get the data for.
+     * @param  {any[]} notes  Notes to get the data for.
      * @param  {Number} courseId ID of the course the notes belong to.
      * @return {Promise}         Promise always resolved. Resolve param is the formatted notes.
      */
@@ -359,7 +360,7 @@ export class AddonNotesProvider {
      * @module mm.addons.notes
      * @ngdoc method
      * @name $mmaNotes#hasOfflineNote
-     * @param  {Object[]}  notes List of notes.
+     * @param  {any[]}  notes List of notes.
      * @return {Boolean}         True if at least 1 note is offline, false otherwise.
      */
     hasOfflineNote(notes: any[]): boolean {

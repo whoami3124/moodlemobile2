@@ -34,7 +34,7 @@ import { CoreSplitViewComponent } from '../../../../components/split-view/split-
 })
 export class AddonNotesListPage implements OnDestroy {
 
-    courseid = 0;
+    courseId = 0;
     currentSite: CoreSite;
     type = '';
     refreshIcon = 'spinner';
@@ -47,7 +47,7 @@ export class AddonNotesListPage implements OnDestroy {
         private domUtils: CoreDomUtilsProvider, private utils: CoreUtilsProvider,
         private textUtils: CoreTextUtilsProvider, private sitesProvider: CoreSitesProvider) {
 
-        this.courseid = navParams.get('courseid') || sitesProvider.getCurrentSite().getSiteHomeId();
+        this.courseId = navParams.get('courseId') || sitesProvider.getCurrentSite().getSiteHomeId();
         this.currentSite = sitesProvider.getCurrentSite();
     }
 
@@ -63,12 +63,12 @@ export class AddonNotesListPage implements OnDestroy {
         return promise.catch(() => {
             // Ignore errors.
         }).then(() => {
-            return this.notesProvider.getNotes(this.courseid).then((notes) => {
+            return this.notesProvider.getNotes(this.courseId).then((notes) => {
                 notes = notes[this.type + 'notes'];
 
                 this.hasOffline = this.notesProvider.hasOfflineNote(notes);
 
-                return this.notesProvider.getNotesUserData(notes, this.courseid).then((notes) => {
+                return this.notesProvider.getNotesUserData(notes, this.courseId).then((notes) => {
                     this.notes = notes;
                 });
 
@@ -89,7 +89,7 @@ export class AddonNotesListPage implements OnDestroy {
         this.fetchNotes(true, false).then(() => {
             // Add log in Moodle.
             this.currentSite.write('core_notes_view_notes', {
-                courseid: this.courseid,
+                courseid: this.courseId,
                 userid: 0
             });
         });
@@ -104,7 +104,7 @@ export class AddonNotesListPage implements OnDestroy {
     refreshNotes(showErrors: boolean, refresher?:any): void {
         this.refreshIcon = 'spinner';
         this.syncIcon = 'spinner';
-        this.notesProvider.invalidateNotes(this.courseid).finally(() => {
+        this.notesProvider.invalidateNotes(this.courseId).finally(() => {
             this.fetchNotes(true, showErrors).finally(() => {
                 if (refresher) {
                     refresher.complete();
@@ -121,7 +121,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @return {Promise<any>}            promise with result
      */
     syncNotes(showErrors: boolean): Promise<any> {
-        /*return this.notesProviderSync.syncNotes(this.courseid).then((warnings) => {
+        /*return this.notesProviderSync.syncNotes(this.courseId).then((warnings) => {
             this.showSyncWarnings(warnings);
         }).catch((error) => {
             if (showErrors) {
@@ -133,6 +133,7 @@ export class AddonNotesListPage implements OnDestroy {
             }
             return Promise.reject();
         });*/
+        return Promise.resolve();
     }
 
     /**
@@ -157,7 +158,7 @@ export class AddonNotesListPage implements OnDestroy {
 
     // Refresh data if this course notes are synchronized automatically.
     syncObserver = $mmEvents.on(mmaNotesAutomSyncedEvent, (data) => {
-        if (data && data.siteid == this.currentSite.getId() && data.courseid == this.courseid) {
+        if (data && data.siteid == this.currentSite.getId() && data.courseid == this.courseId) {
             // Show the sync warnings.
             showSyncWarnings(data.warnings);
 
@@ -177,5 +178,5 @@ export class AddonNotesListPage implements OnDestroy {
      */
     ngOnDestroy() {
         /*syncObserver && syncObserver.off && syncObserver.off();*/
-    });
+    }
 }
