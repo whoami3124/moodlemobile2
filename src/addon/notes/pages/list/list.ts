@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { Component, ViewChild, OnDestroy } from '@angular/core';
-import { IonicPage, Content, PopoverController, NavParams} from 'ionic-angular';
+import { IonicPage, Content, PopoverController, NavParams } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AddonNotesProvider } from '../../providers/notes';
 import { CoreDomUtilsProvider } from '../../../../providers/utils/dom';
@@ -27,7 +27,7 @@ import { CoreSplitViewComponent } from '../../../../components/split-view/split-
 /**
  * Page that displays the list of notes.
  */
-@IonicPage({segment: "addon-notes-list"})
+@IonicPage({ segment: 'addon-notes-list' })
 @Component({
     selector: 'page-addon-notes-list',
     templateUrl: 'list.html',
@@ -57,8 +57,8 @@ export class AddonNotesListPage implements OnDestroy {
      * @param {boolean} showErrors when to display errors or not
      * @return {Promise<any>}      promise with the notes
      */
-    fetchNotes(sync: boolean, showErrors: boolean) : Promise<any> {
-        var promise = sync ? this.syncNotes(showErrors) : Promise.resolve();
+    fetchNotes(sync: boolean, showErrors: boolean): Promise<any> {
+        const promise = sync ? this.syncNotes(showErrors) : Promise.resolve();
 
         return promise.catch(() => {
             // Ignore errors.
@@ -85,7 +85,7 @@ export class AddonNotesListPage implements OnDestroy {
     /**
      * View loaded.
      */
-    ionViewDidLoad() {
+    ionViewDidLoad(): void {
         this.fetchNotes(true, false).then(() => {
             // Add log in Moodle.
             this.currentSite.write('core_notes_view_notes', {
@@ -101,7 +101,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @param {boolean} showErrors whether to display errors or not
      * @param {any}     refresher  refresher instance
      */
-    refreshNotes(showErrors: boolean, refresher?:any) : void {
+    refreshNotes(showErrors: boolean, refresher?: any): void {
         this.refreshIcon = 'spinner';
         this.syncIcon = 'spinner';
         this.notesProvider.invalidateNotes(this.courseId).finally(() => {
@@ -111,7 +111,7 @@ export class AddonNotesListPage implements OnDestroy {
                 }
             });
         });
-    };
+    }
 
     // Tries to synchronize the course notes.
 
@@ -120,7 +120,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @param  {boolean}      showErrors whether to display errors or not
      * @return {Promise<any>}            promise with result
      */
-    syncNotes(showErrors: boolean) : Promise<any> {
+    syncNotes(showErrors: boolean): Promise<any> {
         /*return this.notesProviderSync.syncNotes(this.courseId).then((warnings) => {
             this.showSyncWarnings(warnings);
         }).catch((error) => {
@@ -141,8 +141,8 @@ export class AddonNotesListPage implements OnDestroy {
      *
      * @param {string[]} warnings the warnings
      */
-    showSyncWarnings(warnings: string[]) {
-        var message = this.textUtils.buildMessage(warnings);
+    showSyncWarnings(warnings: string[]): void {
+        const message = this.textUtils.buildMessage(warnings);
         if (message) {
             this.domUtils.showErrorModal(message);
         }
@@ -176,7 +176,7 @@ export class AddonNotesListPage implements OnDestroy {
     /**
      * Page destroyed.
      */
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         /*syncObserver && syncObserver.off && syncObserver.off();*/
     }
 }

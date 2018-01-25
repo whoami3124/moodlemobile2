@@ -30,12 +30,12 @@ export class AddonNotesProvider {
     protected logger;
 
     constructor(logger: CoreLoggerProvider, private sitesProvider: CoreSitesProvider, private appProvider: CoreAppProvider,
-            private utilsProvider: CoreUtilsProvider, private configProvider: CoreConfigProvider,
-            private translate: TranslateService) {
+        private utilsProvider: CoreUtilsProvider, private configProvider: CoreConfigProvider,
+        private translate: TranslateService) {
         this.logger = logger.getInstance('AddonNotesProvider');
     }
 
-     /**
+    /**
      * Add a note.
      *
      * @module mm.addons.notes
@@ -48,7 +48,7 @@ export class AddonNotesProvider {
      * @param  {String} [siteId]    Site ID. If not defined, current site.
      * @return {Promise}            Promise resolved with boolean: true if note was sent to server, false if stored in device.
      */
-    addNote(userId: number, courseId: number, publishState: string, noteText: string, siteId?: string) : Promise<boolean> {
+    addNote(userId: number, courseId: number, publishState: string, noteText: string, siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         if (!this.appProvider.isOnline()) {
@@ -75,7 +75,7 @@ export class AddonNotesProvider {
                 return false;
             });
         }**/
-    };
+    }
 
     /**
      * Add a note. It will fail if offline or cannot connect.
@@ -92,16 +92,16 @@ export class AddonNotesProvider {
      *                                   - error: The error message.
      *                                   - wserror: True if it's an error returned by the WebService, false otherwise.
      */
-    addNoteOnline(userId: number, courseId: number, publishState: string, noteText: string, siteId?: string) : Promise<any> {
-        var notes = [
-                {
-                    userid: userId,
-                    publishstate: publishState,
-                    courseid: courseId,
-                    text: noteText,
-                    format: 1
-                }
-            ];
+    addNoteOnline(userId: number, courseId: number, publishState: string, noteText: string, siteId?: string): Promise<any> {
+        const notes = [
+            {
+                courseid: courseId,
+                format: 1
+                publishstate: publishState,
+                text: noteText,
+                userid: userId
+            }
+        ];
 
         return this.addNotesOnline(notes, siteId).catch((error) => {
             return Promise.reject({
@@ -122,7 +122,7 @@ export class AddonNotesProvider {
                 // Ignore errors.
             });
         });
-    };
+    }
 
     /**
      * Add several notes. It will fail if offline or cannot connect.
@@ -135,21 +135,21 @@ export class AddonNotesProvider {
      * @return {Promise}         Promise resolved when added, rejected otherwise. Promise resolved doesn't mean that notes
      *                           have been added, the resolve param can contain errors for notes not sent.
      */
-    addNotesOnline(notes: any[], siteId?: string) : Promise<any> {
+    addNotesOnline(notes: any[], siteId?: string): Promise<any> {
         if (!notes || !notes.length) {
-            return Promise.resolve()
+            return Promise.resolve();
         }
 
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         return this.sitesProvider.getSite(siteId).then((site) => {
-            var data = {
-                    notes: notes
-                };
+            const data = {
+                notes: notes
+            };
 
             return site.write('core_notes_create_notes', data);
         });
-    };
+    }
 
     /**
      * Returns whether or not the add note plugin is enabled for a certain site.
@@ -163,7 +163,7 @@ export class AddonNotesProvider {
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if enabled, resolved with false or rejected otherwise.
      */
-    isPluginAddNoteEnabled(siteId?: string) : Promise<boolean> {
+    isPluginAddNoteEnabled(siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         return this.sitesProvider.getSite(siteId).then((site) => {
@@ -175,7 +175,7 @@ export class AddonNotesProvider {
 
             return true;
         });
-    };
+    }
 
     /**
      * Returns whether or not the add note plugin is enabled for a certain course.
@@ -187,23 +187,23 @@ export class AddonNotesProvider {
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if enabled, resolved with false or rejected otherwise.
      */
-    isPluginAddNoteEnabledForCourse(courseId: number, siteId?: string) : Promise<boolean> {
+    isPluginAddNoteEnabledForCourse(courseId: number, siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         return this.sitesProvider.getSite(siteId).then((site) => {
             // The only way to detect if it's enabled is to perform a WS call.
             // We use an invalid user ID (-1) to avoid saving the note if the user has permissions.
-            var data = {
-                    notes: [
-                        {
-                            userid: -1,
-                            publishstate: 'personal',
-                            courseid: courseId,
-                            text: '',
-                            format: 1
-                        }
-                    ]
-                };
+            const data = {
+                notes: [
+                    {
+                        userid: -1,
+                        publishstate: 'personal',
+                        courseid: courseId,
+                        text: '',
+                        format: 1
+                    }
+                ]
+            };
 
             // Use .read to cache data and be able to check it in offline. This means that, if a user loses the capabilities
             // to add notes, he'll still see the option in the app.
@@ -214,7 +214,7 @@ export class AddonNotesProvider {
                 return false;
             });
         });
-    };
+    }
 
     /**
      * Returns whether or not the read notes plugin is enabled for the current site.
@@ -228,7 +228,7 @@ export class AddonNotesProvider {
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if enabled, resolved with false or rejected otherwise.
      */
-    isPluginViewNotesEnabled(siteId?: string) : Promise<boolean> {
+    isPluginViewNotesEnabled(siteId?: string): Promise<boolean> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         return this.sitesProvider.getSite(siteId).then((site) => {
@@ -240,7 +240,7 @@ export class AddonNotesProvider {
 
             return true;
         });
-    };
+    }
 
     /**
      * Returns whether or not the read notes plugin is enabled for a certain course.
@@ -252,13 +252,13 @@ export class AddonNotesProvider {
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved with true if enabled, resolved with false or rejected otherwise.
      */
-    isPluginViewNotesEnabledForCourse(courseId, siteId?: string) : Promise<boolean> {
+    isPluginViewNotesEnabledForCourse(courseId: number, siteId?: string): Promise<boolean> {
         return this.getNotes(courseId, false, true, siteId).then(() => {
             return true;
         }).catch(() => {
             return false;
         });
-    };
+    }
 
     /**
      * Get the cache key for the get notes call.
@@ -266,7 +266,7 @@ export class AddonNotesProvider {
      * @param  {Number} courseId ID of the course to get the notes from.
      * @return {String}          Cache key.
      */
-    getNotesCacheKey(courseId: number) : string {
+    getNotesCacheKey(courseId: number): string {
         return 'mmaNotes:notes:' + courseId;
     }
 
@@ -282,19 +282,19 @@ export class AddonNotesProvider {
      * @param  {String} [siteId]     Site ID. If not defined, current site.
      * @return {Promise}             Promise to be resolved when the notes are retrieved.
      */
-    getNotes(courseId: number, ignoreCache?: boolean, onlyOnline?: boolean, siteId?: string) : Promise<any> {
+    getNotes(courseId: number, ignoreCache?: boolean, onlyOnline?: boolean, siteId?: string): Promise<any> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         this.logger.debug('Get notes for course ' + courseId);
 
         return this.sitesProvider.getSite(siteId).then((site) => {
 
-            let data = {
-                    courseid : courseId
-                },
-                preSets: CoreSiteWSPreSets = {
-                    cacheKey: this.getNotesCacheKey(courseId)
-                };
+            const data = {
+                courseid: courseId
+            };
+            let preSets: CoreSiteWSPreSets = {
+                cacheKey: this.getNotesCacheKey(courseId)
+            };
 
             if (ignoreCache) {
                 preSets.getFromCache = false;
@@ -322,7 +322,7 @@ export class AddonNotesProvider {
                 });*/
             });
         });
-    };
+    }
 
     /**
      * Get user data for notes since they only have userid.
@@ -334,8 +334,8 @@ export class AddonNotesProvider {
      * @param  {Number} courseId ID of the course the notes belong to.
      * @return {Promise}         Promise always resolved. Resolve param is the formatted notes.
      */
-    getNotesUserData(notes: any[], courseId: number) : Promise<any> {
-        var promises = [];
+    getNotesUserData(notes: any[], courseId: number): Promise<any> {
+        let promises = [];
 
         /*notes.forEach((note) => {
             var promise = $mmUser.getProfile(note.userid, courseId, true).then((user) => {
@@ -352,7 +352,7 @@ export class AddonNotesProvider {
         return Promise.all(promises).then(() => {
             return notes;
         });
-    };
+    }
 
     /**
      * Given a list of notes, check if any of them is an offline note.
@@ -363,19 +363,19 @@ export class AddonNotesProvider {
      * @param  {any[]}  notes List of notes.
      * @return {Boolean}         True if at least 1 note is offline, false otherwise.
      */
-    hasOfflineNote(notes: any[]) : boolean {
+    hasOfflineNote(notes: any[]): boolean {
         if (!notes || !notes.length) {
             return false;
         }
 
-        for (var i = 0, len = notes.length; i < len; i++) {
+        for (let i = 0, len = notes.length; i < len; i++) {
             if (notes[i].offline) {
                 return true;
             }
         }
 
         return false;
-    };
+    }
 
     /**
      * Invalidate get notes WS call.
@@ -387,11 +387,11 @@ export class AddonNotesProvider {
      * @param  {String} [siteId] Site ID. If not defined, current site.
      * @return {Promise}         Promise resolved when data is invalidated.
      */
-    invalidateNotes(courseId: number, siteId?: string) : Promise<any> {
+    invalidateNotes(courseId: number, siteId?: string): Promise<any> {
         siteId = siteId || this.sitesProvider.getCurrentSiteId();
 
         return this.sitesProvider.getSite(siteId).then((site) => {
             return site.invalidateWsCacheForKey(this.getNotesCacheKey(courseId));
         });
-    };
+    }
 }

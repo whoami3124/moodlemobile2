@@ -34,7 +34,7 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      *
      * @return {boolean} Whether or not the handler is enabled on a site level.
      */
-    isEnabled() : boolean|Promise<boolean> {
+    isEnabled(): boolean | Promise<boolean> {
         return this.notesProvider.isPluginViewNotesEnabled();
     }
 
@@ -43,12 +43,12 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      *
      * @return {CoreMainMenuHandlerData} Data needed to render the handler.
      */
-    getDisplayData() : CoreCoursesHandlerData {
+    getDisplayData(): CoreCoursesHandlerData {
         return {
-            title: 'addon.notes.notes',
-            action: (courseId: number) => {
+            action: (courseId: number): any => {
                 // Do something.
             },
+            title: 'addon.notes.notes'
         };
     }
 
@@ -62,7 +62,7 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      * @param {any} [admOptions] Course admin options for current user. See CoreCoursesProvider.getUserAdministrationOptions.
      * @return {boolean|Promise<boolean>} True or promise resolved with true if enabled.
      */
-    isEnabledForCourse(courseId: number, accessData: any, navOptions?: any, admOptions?: any) : boolean {
+    isEnabledForCourse(courseId: number, accessData: any, navOptions?: any, admOptions?: any): boolean {
         if (accessData && accessData.type == CoreCoursesProvider.ACCESS_GUEST) {
             return false; // Not enabled for guests.
         }
@@ -84,7 +84,7 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
      * @param {any} [admOptions] Course admin options for current user. See CoreCoursesProvider.getUserAdministrationOptions.
      * @return {boolean|Promise<boolean>} True or promise resolved with true if enabled.
      */
-    shouldDisplayForCourse(courseId: number, accessData: any, navOptions?: any, admOptions?: any) : boolean|Promise<boolean> {
+    shouldDisplayForCourse(courseId: number, accessData: any, navOptions?: any, admOptions?: any): boolean | Promise<boolean> {
         if (navOptions && typeof navOptions.notes != 'undefined') {
             return navOptions.notes;
         }
@@ -92,8 +92,10 @@ export class AddonNotesCoursesHandler implements CoreCoursesHandler {
         if (typeof this.coursesNavEnabledCache[courseId] != 'undefined') {
             return this.coursesNavEnabledCache[courseId];
         }
-        return this.notesProvider.isPluginViewNotesEnabledForCourse(courseId).then(function(enabled) {
+
+        return this.notesProvider.isPluginViewNotesEnabledForCourse(courseId).then((enabled) => {
             this.coursesNavEnabledCache[courseId] = enabled;
+
             return enabled;
         });
     }
