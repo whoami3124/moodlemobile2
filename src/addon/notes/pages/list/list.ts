@@ -57,7 +57,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @param {boolean} showErrors when to display errors or not
      * @return {Promise<any>}      promise with the notes
      */
-    fetchNotes(sync: boolean, showErrors: boolean): Promise<any> {
+    fetchNotes(sync: boolean, showErrors: boolean) : Promise<any> {
         var promise = sync ? this.syncNotes(showErrors) : Promise.resolve();
 
         return promise.catch(() => {
@@ -101,7 +101,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @param {boolean} showErrors whether to display errors or not
      * @param {any}     refresher  refresher instance
      */
-    refreshNotes(showErrors: boolean, refresher?:any): void {
+    refreshNotes(showErrors: boolean, refresher?:any) : void {
         this.refreshIcon = 'spinner';
         this.syncIcon = 'spinner';
         this.notesProvider.invalidateNotes(this.courseId).finally(() => {
@@ -120,7 +120,7 @@ export class AddonNotesListPage implements OnDestroy {
      * @param  {boolean}      showErrors whether to display errors or not
      * @return {Promise<any>}            promise with result
      */
-    syncNotes(showErrors: boolean): Promise<any> {
+    syncNotes(showErrors: boolean) : Promise<any> {
         /*return this.notesProviderSync.syncNotes(this.courseId).then((warnings) => {
             this.showSyncWarnings(warnings);
         }).catch((error) => {
