@@ -1,5 +1,5 @@
 {
-    "app_id" : "net.moodle.learn",
+    "app_id" : "es.sispedig.sispedigmobile",
     "versioncode" : "2",
     "versionname" : "1.1",
     "cache_expiration_time" : 300000,
@@ -8,6 +8,6 @@
     "wsservice" : "moodle_mobile_app",
     "wsextservice" : "local_mobile",
     "demo_sites": {},
-    "siteurl": "https://learn.moodle.net/",
-    "gcmpn": "learn-moodle-1159"
+    "siteurl": "http://sispedig.hol.es/",
+    "gcmpn": ""
 }
