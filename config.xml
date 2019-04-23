@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="net.moodle.learn" version="1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Learn Moodle</name>
-  <description>Official app for learn.moodle.net (Moodle MOOC)</description>
+  <name>SIMPPOL</name>
+  <description>SIMPPOL UPT DIKLAT KOPERASI DAN UKM PROVINSI JAWA TIMUR</description>
   <author href="http://moodle.com" email="mobile@moodle.com">Moodle Mobile team</author>
   <content src="index.html"/>
   <access origin="*"/>
